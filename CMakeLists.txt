@@ -21,6 +21,8 @@ FetchContent_MakeAvailable(SFML)
 # Lista dei sorgenti
 add_executable(Blackjack1
         main.cpp
+        Carta.cpp
+        Carta.h
 
 )
 
