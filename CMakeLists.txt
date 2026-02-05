@@ -25,6 +25,10 @@ add_executable(Blackjack1
         Carta.h
         Player.cpp
         Player.h
+        Dealer.cpp
+        Dealer.h
+        Deck.cpp
+        Deck.h
 
 )
 

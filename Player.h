@@ -9,6 +9,7 @@
 #include "Carta.h"
 
 class Player {
+
 protected:
     std::vector<Carta> hand;
     int balance;
@@ -29,6 +30,5 @@ public:
     const std::vector<Carta>& getHand() const;
     void showHand() const;
 };
-
 
 #endif //BLACKJACK_PLAYER_H
