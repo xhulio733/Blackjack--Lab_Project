@@ -20,7 +20,6 @@ int main() {
     return 0;
 }
 */
-
 #include <SFML/Graphics.hpp>
 #include <filesystem>
 #include <iostream>
@@ -37,34 +36,21 @@ int countPoints(const std::vector<std::string>& hand) {
     int aceCount = 0;
 
     for (const auto& c : hand) {
-        // Prendi la parte dopo l'ultimo '_' -> "A", "2", ..., "J", "Q", "K"
         size_t pos = c.rfind('_');
-        if (pos == std::string::npos) continue; // sicurezza
+        if (pos == std::string::npos) continue;
         std::string value = c.substr(pos + 1);
 
         int val = 0;
-        if (value == "A") {
-            val = 11;
-            aceCount++;
-        }
+        if (value == "A") { val = 11; aceCount++; }
         else if (value == "J" || value == "Q" || value == "K") val = 10;
         else {
-            try {
-                val = std::stoi(value);
-            } catch (...) {
-                val = 0; // sicurezza, non crasha
-            }
+            try { val = std::stoi(value); }
+            catch (...) { val = 0; }
         }
-
         sum += val;
     }
 
-    // Riduci gli assi se bust
-    while (sum > 21 && aceCount > 0) {
-        sum -= 10;
-        aceCount--;
-    }
-
+    while (sum > 21 && aceCount > 0) { sum -= 10; aceCount--; }
     return sum;
 }
 
@@ -74,28 +60,26 @@ int main() {
 
     sf::Font font;
     if (!font.loadFromFile("C:/Windows/Fonts/arial.ttf")) {
-        std::cout << "Font error\n";
+        std::cerr << "Font error\n";
         return 1;
     }
 
     // ------------------ LOAD CARDS ------------------
     std::string cardsFolder =
-    "C:/Users/Xhulio/CLionProjects/Blackjack1/Cards/PNG/Cards (large)/";
+        "C:/Users/Xhulio/CLionProjects/Blackjack1/Cards/PNG/Cards (large)/";
 
     std::unordered_map<std::string, sf::Texture> textures;
     std::unordered_map<std::string, sf::Sprite> cardSprites;
 
-    // Carica tutte le carte tranne card_back
     for (const auto& e : fs::directory_iterator(cardsFolder)) {
         if (e.path().extension() == ".png") {
             std::string name = e.path().stem().string();
-            if (name == "card_back") continue; // salta card_back dal mazzo
+            if (name == "card_back") continue;
             textures[name].loadFromFile(e.path().string());
             cardSprites[name] = sf::Sprite(textures[name]);
         }
     }
 
-    // Carica la card_back separatamente
     sf::Texture backTexture;
     if (!backTexture.loadFromFile(cardsFolder + "card_back.png")) {
         std::cerr << "Errore caricamento card_back\n";
@@ -103,12 +87,10 @@ int main() {
     }
     sf::Sprite backSprite(backTexture);
 
-    // Crea il mazzo solo con le carte giocabili
     std::vector<std::string> deck;
     for (auto& c : cardSprites) deck.push_back(c.first);
     std::shuffle(deck.begin(), deck.end(), std::mt19937(std::random_device{}()));
 
-    // Funzione per dare una carta
     auto dealCard = [&](std::vector<sf::Sprite>& hand,
                         std::vector<std::string>& names,
                         float y) {
@@ -121,7 +103,6 @@ int main() {
         hand.push_back(s);
         names.push_back(c);
     };
-
 
     // ------------------ BET SELECTION ------------------
     int balance = 100;
@@ -154,9 +135,7 @@ int main() {
     while (window.isOpen() && !startHand) {
         sf::Event ev;
         while (window.pollEvent(ev)) {
-            if (ev.type == sf::Event::Closed)
-                return 0;
-
+            if (ev.type == sf::Event::Closed) window.close();
             if (ev.type == sf::Event::MouseButtonPressed) {
                 sf::Vector2f m(ev.mouseButton.x, ev.mouseButton.y);
                 if (bet5.getGlobalBounds().contains(m)) bet = 5;
@@ -191,10 +170,8 @@ int main() {
 
     int pPoints = countPoints(playerNames);
 
-    // ------------------ BUTTONS ------------------
     sf::RectangleShape hit({100, 50}); hit.setPosition(900, 650);
     sf::RectangleShape stand({100, 50}); stand.setPosition(1040, 650);
-
     hit.setFillColor(sf::Color::Blue);
     stand.setFillColor(sf::Color::Red);
 
@@ -208,8 +185,7 @@ int main() {
     while (window.isOpen()) {
         sf::Event ev;
         while (window.pollEvent(ev)) {
-            if (ev.type == sf::Event::Closed)
-                return 0;
+            if (ev.type == sf::Event::Closed) window.close();
 
             if (ev.type == sf::Event::MouseButtonPressed && playerTurn && !busted) {
                 sf::Vector2f m(ev.mouseButton.x, ev.mouseButton.y);
@@ -217,7 +193,6 @@ int main() {
                 if (hit.getGlobalBounds().contains(m)) {
                     dealCard(playerHand, playerNames, 600);
                     pPoints = countPoints(playerNames);
-
                     if (pPoints > 21) {
                         busted = true;
                         playerTurn = false;
@@ -236,30 +211,34 @@ int main() {
             }
         }
 
+        // ------------------ DEALER TURN ------------------
         if (dealerTurn && !busted) {
+            int dealerPoints = countPoints(dealerNames);
+            int playerPointsFinal = pPoints;
 
-            while (countPoints(dealerNames) < 17) {
+            while (dealerPoints < 17) {
                 dealCard(dealerHand, dealerNames, 100);
+                dealerPoints = countPoints(dealerNames);
             }
 
-            int d = countPoints(dealerNames);
-
-            if (d > 21 || pPoints > d) {
+            if (dealerPoints > 21) {
                 result.setString("YOU WIN");
                 balance += bet;
-            }
-            else if (pPoints < d) {
+            } else if (playerPointsFinal > dealerPoints) {
+                result.setString("YOU WIN");
+                balance += bet;
+            } else if (playerPointsFinal < dealerPoints) {
                 result.setString("YOU LOSE");
                 balance -= bet;
-            }
-            else {
+            } else {
                 result.setString("TIE");
             }
 
             dealerTurn = false;
+            hideDealer = false;
         }
 
-
+        // ------------------ DRAW ------------------
         window.clear(sf::Color::Green);
 
         for (size_t i = 0; i < dealerHand.size(); ++i) {
@@ -269,23 +248,23 @@ int main() {
             } else {
                 window.draw(dealerHand[i]);
             }
-
-
-            for (auto& c : playerHand) window.draw(c);
-
-            if (playerTurn) {
-                window.draw(hit); window.draw(hitT);
-                window.draw(stand); window.draw(standT);
-            }
-
-            window.draw(betText);
-            window.draw(result);
-            window.display();
         }
 
-        return 0;
+        for (auto& c : playerHand) window.draw(c);
+
+        if (playerTurn && !busted) {
+            window.draw(hit); window.draw(hitT);
+            window.draw(stand); window.draw(standT);
+        }
+
+        window.draw(betText);
+        window.draw(result);
+        window.display();
     }
+
+    return 0;
 }
+
 
 
 
