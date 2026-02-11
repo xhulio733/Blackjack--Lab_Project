@@ -5,8 +5,8 @@
 #include <vector>
 #include <random>
 #include <algorithm>
-#include <thread> // Serve per l'animazione (sleep)
-#include <chrono> // Serve per il tempo
+#include <thread>
+#include <chrono>
 
 namespace fs = std::filesystem;
 
@@ -236,7 +236,7 @@ int main() {
 
         if (pPoints == 21) {
             playerTurn = false; dealerTurn = false; hideDealer = false; handOver = true;
-            result.setString("BLACKJACK!");
+            result.setString("BLACKJACK! Payout 3:2");
             balance += (bet + (bet * 1.5));
             hitT.setString("PLAY"); standT.setString("EXIT");
         }
@@ -277,7 +277,7 @@ int main() {
 
                                 if (pPoints > 21) {
                                     playerTurn = false; handOver = true; hideDealer = false;
-                                    result.setString("BUST!");
+                                    result.setString("BUST (DOUBLE)!");
                                     hitT.setString("PLAY"); standT.setString("EXIT");
                                 } else {
                                     playerTurn = false; dealerTurn = true; hideDealer = false;
