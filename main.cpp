@@ -236,7 +236,7 @@ int main() {
 
         if (pPoints == 21) {
             playerTurn = false; dealerTurn = false; hideDealer = false; handOver = true;
-            result.setString("BLACKJACK! Payout 3:2");
+            result.setString("BLACKJACK!");
             balance += (bet + (bet * 1.5));
             hitT.setString("PLAY"); standT.setString("EXIT");
         }
@@ -277,7 +277,7 @@ int main() {
 
                                 if (pPoints > 21) {
                                     playerTurn = false; handOver = true; hideDealer = false;
-                                    result.setString("BUST (DOUBLE)!");
+                                    result.setString("BUST!");
                                     hitT.setString("PLAY"); standT.setString("EXIT");
                                 } else {
                                     playerTurn = false; dealerTurn = true; hideDealer = false;
