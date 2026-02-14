@@ -29,6 +29,10 @@ add_executable(Blackjack1
         Dealer.h
         Deck.cpp
         Deck.h
+        GameLogic.cpp
+        GameLogic.h
+        GameGraphics.cpp
+        GameGraphics.h
 
 )
 
