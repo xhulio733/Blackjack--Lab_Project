@@ -60,3 +60,29 @@ if(WIN32)
             advapi32
     )
 endif()
+# ==============================
+# GOOGLE TEST
+# ==============================
+
+FetchContent_Declare(
+        googletest
+        URL https://github.com/google/googletest/archive/refs/heads/main.zip
+)
+
+FetchContent_MakeAvailable(googletest)
+
+enable_testing()
+
+add_executable(GameLogicTests
+        Tests/GameLogicTest.cpp
+        GameLogic.cpp
+)
+
+target_include_directories(GameLogicTests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+
+target_link_libraries(GameLogicTests
+        GTest::gtest_main
+)
+
+include(GoogleTest)
+gtest_discover_tests(GameLogicTests)
