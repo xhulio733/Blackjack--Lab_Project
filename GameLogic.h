@@ -14,5 +14,3 @@ public:
 };
 
 #endif
-
-//BLACKJACK_GAMELOGIC_H
