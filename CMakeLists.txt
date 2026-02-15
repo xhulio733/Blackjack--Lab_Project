@@ -60,9 +60,7 @@ if(WIN32)
             advapi32
     )
 endif()
-# ==============================
 # GOOGLE TEST
-# ==============================
 
 FetchContent_Declare(
         googletest
@@ -96,3 +94,15 @@ target_link_libraries(GameLogicTests
 
 include(GoogleTest)
 gtest_discover_tests(GameLogicTests)
+
+file(GLOB_RECURSE ASSET_FILES
+        ${CMAKE_SOURCE_DIR}/assets/*
+)
+
+add_custom_target(copy_assets ALL
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/assets
+        ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/assets
+)
+
+add_dependencies(Blackjack1 copy_assets)
