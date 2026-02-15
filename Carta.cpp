@@ -10,9 +10,11 @@ Carta::Carta(const std::string &type, const std::string &value, int point)
 std::string Carta::getType() const {
     return type;
 }
+
 std::string Carta::getValue() const {
     return value;
 }
+
 int Carta::getPoint() const {
     return point;
 }

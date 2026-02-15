@@ -76,6 +76,16 @@ enable_testing()
 add_executable(GameLogicTests
         Tests/GameLogicTest.cpp
         GameLogic.cpp
+        Tests/DeckTest.cpp
+        Tests/DealerTest.cpp
+        Tests/PlayerTest.cpp
+
+        # FILE DEL PROGETTO CHE DEVONO ESSERE LINKATI
+        GameLogic.cpp
+        Deck.cpp
+        Dealer.cpp
+        Player.cpp
+        Carta.cpp
 )
 
 target_include_directories(GameLogicTests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
