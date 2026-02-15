@@ -11,13 +11,19 @@
 class Deck {
 
 private:
+    // Vettore che contiene tutte le carte del mazzo (52 carte)
     std::vector<Carta> carte;
+    // Indice della prossima carta da pescare.
     int nextCardindex;
 
 public:
+    //Crea un mazzo di 52 carte
     Deck();
+    //Mescola le carte e fa ripartire a 0 index
     void mix();
+    //Restituisce la prossima carta
     Carta nextCard();
+    //Controlla se il mazzo è terminato.
     bool endDeck() const;
 };
 

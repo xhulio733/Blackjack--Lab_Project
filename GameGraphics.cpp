@@ -21,12 +21,13 @@ void GameGraphics::run() {
 
     // Caricamento font
     sf::Font font;
-    if (!font.loadFromFile("C:/Windows/Fonts/arial.ttf")) {
+    if (!font.loadFromFile("assets/fonts/arial.ttf")){
         std::cerr << "Font error\n"; return;
     }
 
     // Cartella dove si trovano le immagini delle carte
-    std::string cardsFolder = "C:/Users/Xhulio/CLionProjects/Blackjack1/Cards/PNG/Cards (large)/";
+    std::string cardsFolder = "assets/cards/";
+
     // Mappa nome carta → texture
     std::unordered_map<std::string, sf::Texture> textures;
     // Mappa nome carta → sprite (oggetto disegnabile)
